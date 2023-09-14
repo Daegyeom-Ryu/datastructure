@@ -66,18 +66,34 @@ class SinglyLinkedList {
         this.length--;
         return oldHead;
     }
-    
+    get(index) {    // index에 해당하는 노드 리턴
+        if(index < 0 || index >= this.length)   return null;
+        let currNode = this.head;
+        let count = 0;
+        while(count < index) {
+            currNode = currNode.next;
+            count++;
+        }
+        return currNode;
+    }
+    set(index, value) { // index에 해당하는 노드의 값 업데이트 -> boolean 반환
+        let foundNode = this.get(index);
+        if(!foundNode)  return false;
+        foundNode.value = value;
+        return true;
+    }
 }
 let list = new SinglyLinkedList();
-list.unshift(1);
 list.unshift(2);
-list.unshift(3);
+list.unshift(1);
+list.push(3);
+list.push(4);
 console.log(list);
-console.log(list.shift());
-console.log(list);
-console.log(list.shift());
-console.log(list);
-console.log(list.shift());
-console.log(list);
-console.log(list.shift());
+console.log(list.get(0));
+console.log(list.get(1));
+console.log(list.get(2));
+console.log(list.get(3));
+console.log(list.set(-1,100));
+console.log(list.set(4,100));
+console.log(list.set(1,100));
 console.log(list);
