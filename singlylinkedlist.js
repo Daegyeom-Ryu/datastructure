@@ -105,7 +105,24 @@ class SinglyLinkedList {
         removedNode.next = null;
         this.length--;
         return removedNode;
-
+    }
+    reverse() { // 순서 역방향으로 만들기
+        if(!this.head)  return undefined;
+        if(this.head === this.tail) return this;
+        
+        let node = this.head;
+        this.head = this.tail;
+        this.tail = node;
+        
+        let prev = null;
+        let next;
+        while(node) {
+            next = node.next;
+            node.next = prev;
+            prev = node;
+            node = next;
+        }
+        return this;
     }
     print() {
         let current = this.head;
@@ -118,46 +135,13 @@ class SinglyLinkedList {
         return arr;
     }
 }
-// insert test code
+// reverse test code
 let list = new SinglyLinkedList();
-list.insert(0,1);   // unshift
-list.insert(list.length,3); // push
-list.insert(1,2);   // insert
-list.insert(list.length,4); // push
-list.print(); // [1,2,3,4,5]
-list.insert(0,0);   // unshift
-list.insert(list.length,5); // push
-list.insert(list.length,7); // push
-list.insert(list.length-1,6);   // insert
-list.print(); //[0,1,2,3,4,5,6.7]
-console.log(list.insert(-1,100)); // false
-console.log(list.insert(9,100));  // false
-list.print(); // [0,1,2,3,4,5,6,7]
-// remove test code
-list = new SinglyLinkedList();
-
 list.push(1);
 list.push(2);
 list.push(3);
 list.push(4);
 list.push(5);
-list.print();   // [1,2,3,4,5]
-
-console.log(list.remove(0)); // shift -> 1
-console.log(list.remove(3)); // pop -> 5
-list.print(); // [2,3,4]
-list.insert(0,1);
-list.insert(4,5);
 list.print(); // [1,2,3,4,5]
-console.log(list.remove(2)); // remove -> 3
-console.log(list.remove(2)); // remove -> 4
-console.log(list.remove(2)); // pop -> 5
-list.print(); // [1,2]
-console.log(list.remove(0)); // shift -> 1
-console.log(list.remove(-1)); // undefined
-console.log(list.remove(10)); // undefined
-console.log(list.remove(0)); // shift -> 2
-console.log(list.remove(0)); // undefined
-list.print(); // []
-
-
+list.reverse();
+list.print(); // [5,4,3,2,1]
