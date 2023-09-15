@@ -112,6 +112,25 @@ class DoublyLinkedList {
         this.length--;
         return removedNode;
     }
+    reverse() {
+        if(!this.head)  return undefined;
+        if(this.head === this.tail) return this;
+        
+        let node = this.head;
+        this.head = this.tail;
+        this.tail = node;
+
+        let prev = null;
+        let next;
+        while(node) {
+            next = node.next;
+            node.next = prev;
+            node.prev = next;
+            prev = node;
+            node = next;
+        }
+        return this;
+    }
     print() {
         let current = this.head;
         let arr = [];
@@ -133,18 +152,15 @@ class DoublyLinkedList {
 }
 // insert, remove test code
 let list = new DoublyLinkedList();
-list.insert(-1,100);
-list.insert(0,1);
-list.insert(1,3);
-list.insert(2,5);
-list.insert(1,2);
-list.insert(3,4);
-list.print(); // [1,2,3,4,5]
-
-console.log(list.remove(5));    // undefined
-console.log(list.remove(4));    // 5
-console.log(list.remove(0));    // 1 
-console.log(list.remove(1));    // 3
-console.log(list.remove(1));    // 4
-console.log(list.remove(0));    // 2
-console.log(list.remove(0));    // undefined
+list.push(1);
+list.push(2);
+list.push(3);
+list.push(4);
+list.push(5);
+list.print();
+list.reverse();
+list.print();
+list.push(0);
+list.print();
+console.log(list.head);
+console.log(list.tail);
