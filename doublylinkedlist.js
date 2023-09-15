@@ -67,6 +67,28 @@ class DoublyLinkedList {
         this.length--;
         return oldHead;
     }
+    get(index) {
+        if(index < 0 || index >= this.length)    return null;
+        let currNode;
+        if((index+1) <= Math.floor(this.length/2)) {
+            currNode = this.head;
+            for(let i=0; i<index; i++) {
+                currNode = currNode.next;
+            }
+        } else {
+            currNode = this.tail;
+            for(let i=this.length-1; i>index; i--) {
+                currNode = currNode.prev;
+            }
+        }
+        return currNode;
+    }
+    set(index, value) {
+        let foundNode = this.get(index);
+        if(!foundNode)  return false;
+        foundNode.value = value;
+        return true;
+    }
     print() {
         let current = this.head;
         let arr = [];
@@ -77,36 +99,31 @@ class DoublyLinkedList {
         console.log(arr);
         return arr;
     }
+    getTestCode(index) {
+        if((index+1) <= this.length/2) {
+            console.log('start from front');
+        } else {
+            console.log('start from back');
+        }
+        console.log(this.get(index).value); 
+    }
 }
-// unshift, shift test code
+// get, set test code
 let list = new DoublyLinkedList();
-console.log('unshift, shift test code');
-list.unshift(5);
-list.unshift(4);
-list.unshift(3);
-list.unshift(2);
-list.unshift(1);
-list.print(); // [1,2,3,4,5]
-console.log(list.shift()); // 1 prev = null, next = null
-console.log(list.shift()); // 2
-console.log(list.shift()); // 3
-list.print(); // [4,5]
-console.log(list.shift()); // 4
-console.log(list.shift()); // 5
-console.log(list.shift()); // undefined
+console.log('get, set test code');
+for(let i=0; i<100; i++) {
+    list.push(i+1);
+}
 
-// push, pop, unshift, shift test code
-console.log('push, pop, unshift, shift test code');
-list.push(4);
-list.unshift(3);
-list.unshift(2);
-list.push(5);
-list.unshift(1);
-list.print(); // [1,2,3,4,5]
+list.getTestCode(49); // 짝수개 & index 49 (50번째) -> start from front && value = 50
+list.getTestCode(10); // 짝수개 & index 10          -> start from front && value = 11
+list.getTestCode(50); // 짝수개 & index 50 (51번째) -> start from back && value = 51
+list.getTestCode(90); // 짝수개 & index 90          -> start form back && value = 91
+list.pop();
+list.getTestCode(48); // 홀수개 & index 48 (49번째) -> start from front && value = 49
+list.getTestCode(10); // 홀수개 & index 10          -> start from front && value = 11
+list.getTestCode(49); // 홀수개 & index 49 (50번째) -> start from back && value = 50
+list.getTestCode(90); // 홀수개 & index 90          -> start from back && value = 91
+list.set(50,1000);
+console.log(list.get(50).value);    //1000
 
-console.log(list.pop()); // 5
-console.log(list.shift()); // 1 
-console.log(list.pop()); // 4
-console.log(list.shift()); // 2  
-console.log(list.pop()); // 3
-console.log(list.pop()); // undefined; 
