@@ -9,7 +9,7 @@ class Queue {
     constructor() {
         this.first = null;
         this.last = null;
-        this.size = 0;
+        this.length = 0;
     }
     enqueue(treeNode) { 
         if(!this.first) {
@@ -19,7 +19,7 @@ class Queue {
             this.last.next = treeNode;
             this.last = treeNode;
         }
-        this.size++;
+        this.length++;
         return this;
     }
     dequeue() {
@@ -32,7 +32,7 @@ class Queue {
             this.first = oldFirst.next;
             delete oldFirst.next;   // enqueue에서 node에 추가된 next property 제거
         }
-        this.size--;
+        this.length--;
         return oldFirst;
     }
 }
@@ -81,57 +81,127 @@ class BinarySearchTree {
         return currNode;
     }
     DFSPreOrder() {
-        let visited = [];
+        let result = [];
+        let currNode = this.root;
         function preOrder(currNode) {
             if(!currNode)  return;
-            visited.push(currNode.value);
+            result.push(currNode.value);
             if(currNode.left)   preOrder(currNode.left);
             if(currNode.right)  preOrder(currNode.right);
         }
-        preOrder(this.root);
-        return visited;
+        preOrder(currNode);
+        return result;
+    }
+    DFSPreOrderWithoutRecursion() {
+        let result = [];
+        let current = this.root;
+        function preOrder(current) {
+            if(!current)  return;
+            let stack = [];
+            stack.push(current);
+            while(stack.length > 0) {
+                let currNode = stack.pop();
+                result.push(currNode.value);
+                if(currNode.right)  stack.push(currNode.right);
+                if(currNode.left)   stack.push(currNode.left);
+            }
+        }
+        preOrder(current);
+        return result;
     }
     DFSInOrder() {
-        let visited = [];
+        let result = [];
+        let currNode = this.root;
         function inOrder(currNode) {
             if(!currNode)  return;
             if(currNode.left)   inOrder(currNode.left);
-            visited.push(currNode.value);
+            result.push(currNode.value);
             if(currNode.right)  inOrder(currNode.right);
         }
-        inOrder(this.root);
-        return visited;
+        inOrder(currNode);
+        return result;
+    }
+    DFSInOrderWithoutRecursion() {
+        let result = [];
+        let current = this.root;
+        function inOrder(current) {
+            if(!current)   return;
+            let stack = [], visited = [];
+            stack.push(current);
+            while(stack.length > 0) {
+                let currNode = stack[stack.length-1];
+                if(currNode.left && !visited.includes(currNode.left)) {
+                    stack.push(currNode.left);
+                    visited.push(currNode.left);                    
+                    continue;
+                }
+                currNode = stack.pop();
+                result.push(currNode.value);
+                if(currNode.right && !visited.includes(currNode.right)) {
+                    stack.push(currNode.right);
+                    visited.push(currNode.right);
+                }
+            }
+        }
+        inOrder(current);
+        return result;
     }
     DFSPostOrder() {
-        let visited = [];
+        let result = [];
+        let currNode = this.root;
         function postOrder(currNode) {
             if(!currNode)  return;
             if(currNode.left)   postOrder(currNode.left);
             if(currNode.right)  postOrder(currNode.right);
-            visited.push(currNode.value);
+            result.push(currNode.value);
         }
-        postOrder(this.root);
-        return visited;
+        postOrder(currNode);
+        return result;
+    }
+    DFSPostOrderWithoutRecursion() {
+        let result = [];
+        let current = this.root;
+        function postOrder(current) {
+            if(!current)   return;
+            let stack = [], visited = [];
+            stack.push(current);
+            while(stack.length > 0) {
+                let currNode = stack[stack.length - 1];
+                if(currNode.right && !visited.includes(currNode.right)) {
+                    stack.push(currNode.right);
+                    visited.push(currNode.right);
+                }
+                if(currNode.left && !visited.includes(currNode.left)) {
+                    stack.push(currNode.left);
+                    visited.push(currNode.left);
+                    continue;
+                }
+                currNode = stack.pop();
+                result.push(currNode.value);
+            }   
+        }
+        postOrder(current);
+        return result;
     }
     BFS() {
         if(!this.root) return;
         let queue = new Queue();
-        let visited = [];
+        let result = [];
         queue.enqueue(this.root);
-        while(queue.size > 0) {
+        while(queue.length > 0) {
             let node = queue.dequeue();
-            visited.push(node.value);
+            result.push(node.value);
             if(node.left)   queue.enqueue(node.left);
             if(node.right)  queue.enqueue(node.right);  
         }
-        return visited;
+        return result;
     }
 }
 
         //   10
         // 5   15
        // 3 6 12 17   
-// DFS preorder, inorder, postorder / BFS test code
+// DFS preorder, inorder, postorder without Recursion and test code
 let tree = new BinarySearchTree();
 tree.insert(10);
 tree.insert(5);
@@ -140,15 +210,19 @@ tree.insert(15);
 tree.insert(12);
 tree.insert(17);
 tree.insert(6);
+
 console.log(tree.DFSPreOrder());
+console.log(tree.DFSPreOrderWithoutRecursion());
 console.log(tree.DFSInOrder());
+console.log(tree.DFSInOrderWithoutRecursion());
 console.log(tree.DFSPostOrder());
+console.log(tree.DFSPostOrderWithoutRecursion());
 console.log(tree.BFS());
-console.log(tree.root); //10
-console.log(tree.root.left);//5
-console.log(tree.root.right);//15
-console.log(tree.root.left.left);//3
-console.log(tree.root.left.right);//6
-console.log(tree.root.right.left);//12
-console.log(tree.root.right.right);//17
+// console.log(tree.root); //10
+// console.log(tree.root.left);//5
+// console.log(tree.root.right);//15
+// console.log(tree.root.left.left);//3
+// console.log(tree.root.left.right);//6
+// console.log(tree.root.right.left);//12
+// console.log(tree.root.right.right);//17
 
