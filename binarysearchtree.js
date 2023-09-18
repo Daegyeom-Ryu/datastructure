@@ -64,6 +64,73 @@ class BinarySearchTree {
             }
         }
     }
+    findMinNodeFromRightSubTree(lChild, rChild) {
+        let min = rChild;
+        let parentOfMin;
+        while(min.left) {
+            parentOfMin = min;
+            min = parentOfMin.left;
+        }
+        if(rChild !== min) {
+            parentOfMin.left = min.right;
+            min.right = rChild;
+            min.left = lChild;
+        }
+        return min;
+    }
+    findMaxNodeFromLeftSubTree(lChild, rChild) {
+        let max = lChild;
+        let parentOfMax;
+        while(max.right) {
+            parentOfMax = max;
+            max = parentOfMax.right;
+        }
+        if(lChild !== max) {
+            parentOfMax.right = max.left;
+            max.left = lChild;
+            max.right = rChild;
+        }
+        return max;
+    }
+    remove(value) {
+        if(!this.root)  return undefined;
+        // root노드 제거가 아닌 경우
+        let curr = this.root;
+        let parentOfCurr;
+        while(curr) {
+            if(value < curr.value) {
+                parentOfCurr = curr;
+                curr = curr.left;
+            } else if(value > curr.value){
+                parentOfCurr = curr;
+                curr = curr.right;
+            } else {
+                let lChildOfCurr = curr.left;
+                let rChildOfCurr = curr.right;
+                if(!lChildOfCurr && !rChildOfCurr) {
+                    if(value < parentOfCurr.value)    parentOfCurr.left = null;                    
+                    if(value > parentOfCurr.value)    parentOfCurr.right = null;
+                } else if(lChildOfCurr && !rChildOfCurr) {
+                    let altCurr = this.findMaxNodeFromLeftSubTree(lChildOfCurr,rChildOfCurr);
+                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
+                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
+                    curr.left = null;
+                } else if(!lChildOfCurr && rChildOfCurr) {
+                    let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
+                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
+                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
+                    curr.right = null;
+                } else {
+                    let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
+                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
+                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
+                    curr.left = null;
+                    curr.right = null;
+                }
+                return curr; 
+            }
+        }
+    }
     find(value) {
         if(!this.root)  return undefined;
         let currNode = this.root;
@@ -198,31 +265,48 @@ class BinarySearchTree {
     }
 }
 
-        //   10
-        // 5   15
-       // 3 6 12 17   
-// DFS preorder, inorder, postorder without Recursion and test code
+// remove and test code (except root remove);
 let tree = new BinarySearchTree();
+tree.insert(30);
 tree.insert(10);
+tree.insert(50);
 tree.insert(5);
 tree.insert(3);
+tree.insert(7);
+tree.insert(9);
+tree.insert(8);
+tree.insert(20);
+tree.insert(18);
+tree.insert(14);
+tree.insert(16);
 tree.insert(15);
-tree.insert(12);
 tree.insert(17);
-tree.insert(6);
+tree.insert(40);
+tree.insert(35);
+tree.insert(45);
+tree.insert(49);
+tree.insert(48);
+tree.insert(47);
+console.log(tree.remove(10));
 
-console.log(tree.DFSPreOrder());
-console.log(tree.DFSPreOrderWithoutRecursion());
-console.log(tree.DFSInOrder());
-console.log(tree.DFSInOrderWithoutRecursion());
-console.log(tree.DFSPostOrder());
-console.log(tree.DFSPostOrderWithoutRecursion());
-console.log(tree.BFS());
-// console.log(tree.root); //10
-// console.log(tree.root.left);//5
-// console.log(tree.root.right);//15
-// console.log(tree.root.left.left);//3
-// console.log(tree.root.left.right);//6
-// console.log(tree.root.right.left);//12
-// console.log(tree.root.right.right);//17
+console.log(tree.root.value); // 30 
+console.log(tree.root.left.value);    // 14    
+console.log(tree.root.left.left.value);   // 5    
+console.log(tree.root.left.left.left.value);  // 3 
+console.log(tree.root.left.left.right.value); // 7
+console.log(tree.root.left.left.right.right.value);   // 9
+console.log(tree.root.left.left.right.right.left.value);    // 8
+
+console.log(tree.root.left.right.value);  // 20
+console.log(tree.root.left.right.left.value); // 18
+console.log(tree.root.left.right.left.left.value);    // 16
+console.log(tree.root.left.right.left.left.left.value);  // 15
+console.log(tree.root.left.right.left.left.right.value); // 17
+
+
+
+
+
+
+
 
