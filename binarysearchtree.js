@@ -66,12 +66,12 @@ class BinarySearchTree {
     }
     findMinNodeFromRightSubTree(lChild, rChild) {
         let min = rChild;
-        let parentOfMin;
+        let parentOfMin = null;
         while(min.left) {
             parentOfMin = min;
             min = parentOfMin.left;
         }
-        if(rChild !== min) {
+        if(parentOfMin) {
             parentOfMin.left = min.right;
             min.right = rChild;
             min.left = lChild;
@@ -85,7 +85,7 @@ class BinarySearchTree {
             parentOfMax = max;
             max = parentOfMax.right;
         }
-        if(lChild !== max) {
+        if(parentOfMax) {
             parentOfMax.right = max.left;
             max.left = lChild;
             max.right = rChild;
@@ -94,41 +94,41 @@ class BinarySearchTree {
     }
     remove(value) {
         if(!this.root)  return undefined;
-        // root노드 제거가 아닌 경우
         let curr = this.root;
-        let parentOfCurr;
+        let parentOfCurr = null;
         while(curr) {
             if(value < curr.value) {
                 parentOfCurr = curr;
                 curr = curr.left;
+                continue;
             } else if(value > curr.value){
                 parentOfCurr = curr;
                 curr = curr.right;
+                continue;
+            } 
+            let lChildOfCurr = curr.left;
+            let rChildOfCurr = curr.right;
+            if(!lChildOfCurr && !rChildOfCurr) {
+                if(!parentOfCurr)   this.root = null;
+                else    value < parentOfCurr.value ? parentOfCurr.left = null : parentOfCurr.right = null;
+            } else if(lChildOfCurr && !rChildOfCurr) {
+                let altCurr = this.findMaxNodeFromLeftSubTree(lChildOfCurr,rChildOfCurr);
+                if(!parentOfCurr)   this.root = altCurr;
+                else    value < parentOfCurr.value ? parentOfCurr.left = altCurr : parentOfCurr.right = altCurr;
+                curr.left = null;
+            } else if(!lChildOfCurr && rChildOfCurr) {
+                let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
+                if(!parentOfCurr)   this.root = altCurr;
+                else    value < parentOfCurr.value ? parentOfCurr.left = altCurr : parentOfCurr.right = altCurr;
+                curr.right = null;
             } else {
-                let lChildOfCurr = curr.left;
-                let rChildOfCurr = curr.right;
-                if(!lChildOfCurr && !rChildOfCurr) {
-                    if(value < parentOfCurr.value)    parentOfCurr.left = null;                    
-                    if(value > parentOfCurr.value)    parentOfCurr.right = null;
-                } else if(lChildOfCurr && !rChildOfCurr) {
-                    let altCurr = this.findMaxNodeFromLeftSubTree(lChildOfCurr,rChildOfCurr);
-                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
-                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
-                    curr.left = null;
-                } else if(!lChildOfCurr && rChildOfCurr) {
-                    let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
-                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
-                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
-                    curr.right = null;
-                } else {
-                    let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
-                    if(value < parentOfCurr.value)  parentOfCurr.left = altCurr;
-                    if(value > parentOfCurr.value)  parentOfCurr.right = altCurr;
-                    curr.left = null;
-                    curr.right = null;
-                }
-                return curr; 
+                let altCurr = this.findMinNodeFromRightSubTree(lChildOfCurr,rChildOfCurr);
+                if(!parentOfCurr)   this.root = altCurr;
+                else    value < parentOfCurr.value ? parentOfCurr.left = altCurr : parentOfCurr.right = altCurr;
+                curr.left = null;
+                curr.right = null;
             }
+            return curr; 
         }
     }
     find(value) {
@@ -265,43 +265,62 @@ class BinarySearchTree {
     }
 }
 
-// remove and test code (except root remove);
+// remove root and test code;
 let tree = new BinarySearchTree();
-tree.insert(30);
 tree.insert(10);
-tree.insert(50);
 tree.insert(5);
+tree.insert(15);
 tree.insert(3);
 tree.insert(7);
-tree.insert(9);
-tree.insert(8);
-tree.insert(20);
-tree.insert(18);
-tree.insert(14);
-tree.insert(16);
-tree.insert(15);
+tree.insert(12);
 tree.insert(17);
-tree.insert(40);
-tree.insert(35);
-tree.insert(45);
-tree.insert(49);
-tree.insert(48);
-tree.insert(47);
-console.log(tree.remove(10));
+tree.insert(14);
+tree.insert(13);
+tree.remove(10);
 
-console.log(tree.root.value); // 30 
-console.log(tree.root.left.value);    // 14    
-console.log(tree.root.left.left.value);   // 5    
-console.log(tree.root.left.left.left.value);  // 3 
-console.log(tree.root.left.left.right.value); // 7
-console.log(tree.root.left.left.right.right.value);   // 9
-console.log(tree.root.left.left.right.right.left.value);    // 8
+console.log(tree.root.value);  // 12 
+console.log(tree.root.left.value); // 5
+console.log(tree.root.left.left.value);    // 3
+console.log(tree.root.left.right.value);   // 7
+console.log(tree.root.right.value);    // 15
+console.log(tree.root.right.left.value);    // 14
+console.log(tree.root.right.right.value);   // 17
+console.log(tree.root.right.left.left.value);   // 13
+// tree.insert(30);
+// tree.insert(10);
+// tree.insert(50);
+// tree.insert(5);
+// tree.insert(3);
+// tree.insert(7);
+// tree.insert(9);
+// tree.insert(8);
+// tree.insert(20);
+// tree.insert(18);
+// tree.insert(14);
+// tree.insert(16);
+// tree.insert(15);
+// tree.insert(17);
+// tree.insert(40);
+// tree.insert(35);
+// tree.insert(45);
+// tree.insert(49);
+// tree.insert(48);
+// tree.insert(47);
+// console.log(tree.remove(10));
 
-console.log(tree.root.left.right.value);  // 20
-console.log(tree.root.left.right.left.value); // 18
-console.log(tree.root.left.right.left.left.value);    // 16
-console.log(tree.root.left.right.left.left.left.value);  // 15
-console.log(tree.root.left.right.left.left.right.value); // 17
+// console.log(tree.root.value); // 30 
+// console.log(tree.root.left.value);    // 14    
+// console.log(tree.root.left.left.value);   // 5    
+// console.log(tree.root.left.left.left.value);  // 3 
+// console.log(tree.root.left.left.right.value); // 7
+// console.log(tree.root.left.left.right.right.value);   // 9
+// console.log(tree.root.left.left.right.right.left.value);    // 8
+
+// console.log(tree.root.left.right.value);  // 20
+// console.log(tree.root.left.right.left.value); // 18
+// console.log(tree.root.left.right.left.left.value);    // 16
+// console.log(tree.root.left.right.left.left.left.value);  // 15
+// console.log(tree.root.left.right.left.left.right.value); // 17
 
 
 
