@@ -74,8 +74,8 @@ class BinarySearchTree {
         if(parentOfMin) {
             parentOfMin.left = min.right;
             min.right = rChild;
-            min.left = lChild;
         }
+        min.left = lChild;
         return min;
     }
     findMaxNodeFromLeftSubTree(lChild, rChild) {
@@ -88,8 +88,8 @@ class BinarySearchTree {
         if(parentOfMax) {
             parentOfMax.right = max.left;
             max.left = lChild;
-            max.right = rChild;
         }
+        max.right = rChild;
         return max;
     }
     remove(value) {
@@ -265,67 +265,222 @@ class BinarySearchTree {
     }
 }
 
-// remove root and test code;
-let tree = new BinarySearchTree();
+// remove and case test code;
+console.log('----------------------------------------------------------------------');
+console.log('root remove && noChild');
+let tree = new BinarySearchTree();  
 tree.insert(10);
-tree.insert(5);
-tree.insert(15);
-tree.insert(3);
-tree.insert(7);
-tree.insert(12);
-tree.insert(17);
-tree.insert(14);
-tree.insert(13);
-tree.remove(10);
+tree.remove(tree.root);   // 10
+let result = tree.root === null ? 'success' : 'fail';
+console.log(result);
 
-console.log(tree.root.value);  // 12 
-console.log(tree.root.left.value); // 5
-console.log(tree.root.left.left.value);    // 3
-console.log(tree.root.left.right.value);   // 7
-console.log(tree.root.right.value);    // 15
-console.log(tree.root.right.left.value);    // 14
-console.log(tree.root.right.right.value);   // 17
-console.log(tree.root.right.left.left.value);   // 13
-// tree.insert(30);
-// tree.insert(10);
-// tree.insert(50);
-// tree.insert(5);
-// tree.insert(3);
-// tree.insert(7);
-// tree.insert(9);
-// tree.insert(8);
-// tree.insert(20);
-// tree.insert(18);
-// tree.insert(14);
-// tree.insert(16);
-// tree.insert(15);
-// tree.insert(17);
-// tree.insert(40);
-// tree.insert(35);
-// tree.insert(45);
-// tree.insert(49);
-// tree.insert(48);
-// tree.insert(47);
-// console.log(tree.remove(10));
+console.log('----------------------------------------------------------------------');
+console.log('root remove && only leftSubTree && leftChild is max of leftSubTree');
+tree = new BinarySearchTree(); 
+tree.insert(10).insert(5).insert(3).insert(4);
+tree.remove(tree.root.value); // 10 
+let success = tree.root.value === 5 && tree.root.right === null 
+            && tree.root.left.value === 3 && tree.root.left.right.value === 4;
+result = success ? 'success' : 'fail';
+console.log(result);
 
-// console.log(tree.root.value); // 30 
-// console.log(tree.root.left.value);    // 14    
-// console.log(tree.root.left.left.value);   // 5    
-// console.log(tree.root.left.left.left.value);  // 3 
-// console.log(tree.root.left.left.right.value); // 7
-// console.log(tree.root.left.left.right.right.value);   // 9
-// console.log(tree.root.left.left.right.right.left.value);    // 8
+console.log('----------------------------------------------------------------------');
+console.log('root remove && only rightSubTree && rightChild is min of rightSubTree');
+tree = new BinarySearchTree(); 
+tree.insert(10).insert(12).insert(16).insert(13);
+tree.remove(tree.root.value); // 10 
+success = tree.root.value === 12 && tree.root.left === null 
+        && tree.root.right.value === 16 && tree.root.right.left.value === 13;
+result = success ? 'success' : 'fail';
+console.log(result);
 
-// console.log(tree.root.left.right.value);  // 20
-// console.log(tree.root.left.right.left.value); // 18
-// console.log(tree.root.left.right.left.left.value);    // 16
-// console.log(tree.root.left.right.left.left.left.value);  // 15
-// console.log(tree.root.left.right.left.left.right.value); // 17
+console.log('----------------------------------------------------------------------');
+console.log('root remove && two SubTree && rightChild is min of rightSubTree');
+tree = new BinarySearchTree();  
+tree.insert(10).insert(5).insert(12).insert(14).insert(13);
+tree.remove(tree.root.value); // 10 
+success = tree.root.value === 12 && tree.root.left.value === 5 
+        && tree.root.right.value === 14 && tree.root.right.left.value === 13;
+result = success ? 'success' : 'fail';
+console.log(result);
 
+console.log('----------------------------------------------------------------------');
+console.log('root remove && two SubTree');
+tree = new BinarySearchTree();  
+tree.insert(10).insert(5).insert(15).insert(13).insert(14);
+tree.remove(tree.root.value);   // 10
+success = tree.root.value === 13 && tree.root.left.value === 5
+        && tree.root.right.value === 15 && tree.root.right.left.value === 14;
+result = success ? 'success' : 'fail';        
+console.log(result);
 
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && only leftSubTree && leftChild is max');
+tree = new BinarySearchTree();  
+tree.insert(20).insert(10).insert(30).insert(5).insert(3).insert(4);
+let parentOfCurr = tree.root;
+let curr = parentOfCurr.left;
+tree.remove(curr.value);    // 10
+success = tree.root.value === 20 && tree.root.left.value === 5 && tree.root.right.value === 30
+        && tree.root.left.left.value === 3 && tree.root.left.left.right.value === 4;
+result = success ? 'success' : 'fail';        
+console.log(result);
 
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && only leftSubtree');
+tree = new BinarySearchTree();  
+tree.insert(20).insert(10).insert(30).insert(5).insert(6).insert(3).insert(8).insert(7); 
+parentOfCurr = tree.root;
+curr = parentOfCurr.left;
+tree.remove(curr.value);    // 10
+success = tree.root.value === 20 && tree.root.right.value === 30 && tree.root.left.value === 8 
+        && tree.root.left.left.value === 5 && tree.root.left.left.left.value === 3 
+        && tree.root.left.left.right.value === 6 && tree.root.left.left.right.right.value === 7;
+result = success ? 'success' : 'fail';        
+console.log(result);
 
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && only rightSubTree && rightChild is min');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(13).insert(15).insert(14);
+parentOfCurr = tree.root;
+curr = parentOfCurr.left;
+tree.remove(curr.value);    // 10
 
+success = tree.root.value === 20 && tree.root.left.value === 13 && tree.root.right.value === 30 
+        && tree.root.left.right.value === 15 && tree.root.left.right.left.value === 14;
 
+result = success ? 'success' : 'fail';        
+console.log(result);
 
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && only rightSubtree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(13).insert(11).insert(12);
+parentOfCurr = tree.root;
+curr = parentOfCurr.left;
+tree.remove(curr.value);    // 10
 
+success = tree.root.value === 20 && tree.root.left.value === 11 && tree.root.right.value === 30 
+        && tree.root.left.right.value === 13 && tree.root.left.right.left.value === 12;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && two SubTree && rightChild is min of rightSubTree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(7).insert(30).insert(13).insert(15).insert(14);
+parentOfCurr = tree.root;
+curr = parentOfCurr.left; 
+tree.remove(curr.value);    // 10
+
+success = tree.root.value === 20 && tree.root.left.value === 13 && tree.root.right.value === 30
+        && tree.root.left.left.value === 7 && tree.root.left.right.value === 15 && tree.root.left.right.left.value === 14;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && two SubTree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(7).insert(30).insert(13).insert(11).insert(12);
+parentOfCurr = tree.root;
+curr = parentOfCurr.left; 
+tree.remove(curr.value);    // 10
+
+success = tree.root.value === 20 && tree.root.left.value === 11 && tree.root.right.value === 30
+        && tree.root.left.left.value === 7 && tree.root.left.right.value === 13 && tree.root.left.right.left.value === 12;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.right) remove && only leftSubTree && leftChild is max');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(25).insert(23).insert(24);
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10 && tree.root.right.value === 25 
+        && tree.root.right.left.value === 23 && tree.root.right.left.right.value === 24;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.right) remove && only leftSubtree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(25).insert(27).insert(26).insert(29).insert(28);
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10 && tree.root.right.value === 29
+        && tree.root.right.left.value === 25 && tree.root.right.left.right.value === 27
+        && tree.root.right.left.right.left.value === 26 && tree.root.right.left.right.right.value === 28;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.right) remove && only rightSubTree && rightChild is min');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(35).insert(38).insert(36).insert(39); 
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10 && tree.root.right.value === 35
+        && tree.root.right.right.value === 38 && tree.root.right.right.left.value === 36
+        && tree.root.right.right.right.value === 39;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.right) remove && only rightSubtree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(36).insert(34).insert(32).insert(35).insert(33);
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10
+        && tree.root.right.value === 32 && tree.root.right.right.value === 36
+        && tree.root.right.right.left.value === 34 && tree.root.right.right.left.left.value === 33
+        &&tree.root.right.right.left.right.value === 35;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.right) remove && two SubTree && rightChild is min of rightSubTree');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(25).insert(35).insert(34).insert(38).insert(31).insert(32); 
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10
+        && tree.root.right.value === 31 && tree.root.right.left.value === 25
+        && tree.root.right.right.value === 35 && tree.root.right.right.left.value === 34
+        && tree.root.right.right.right.value === 38 && tree.root.right.right.left.left.value === 32;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+console.log('----------------------------------------------------------------------');
+console.log('curr(parentOfCurr.left) remove && two SubTree(use rightSubTree)');
+tree = new BinarySearchTree(); 
+tree.insert(20).insert(10).insert(30).insert(25).insert(35).insert(38).insert(36).insert(39); 
+parentOfCurr = tree.root;
+curr = parentOfCurr.right; 
+tree.remove(curr.value);    // 30
+
+success = tree.root.value === 20 && tree.root.left.value === 10 && tree.root.right.value === 35
+        && tree.root.right.left.value === 25&& tree.root.right.right.value === 38
+        && tree.root.right.right.left.value === 36&& tree.root.right.right.right.value === 39;
+
+result = success ? 'success' : 'fail';        
+console.log(result);
+console.log('----------------------------------------------------------------------');
