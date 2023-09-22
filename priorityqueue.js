@@ -1,7 +1,7 @@
 class Node {
     constructor(priority,value) {
-        this.value = value;
         this.priority = priority;
+        this.value = value;
     }
 }
 class PriorityQueue {
@@ -59,16 +59,20 @@ class PriorityQueue {
         }
     }
 }
-// priorityqueue enqueue, dequeue method and test code;
+// priorityqueue duplicated priority problem
+// inserted-first should come out first;
 let pq = new PriorityQueue();
-pq.enqueue(3,'10억 부자');
-pq.enqueue(5,'마음 부자');
-pq.enqueue(2,'100억 부자');
-pq.enqueue(4,'1억 부자');
-pq.enqueue(1,'1000억 부자');
+pq.enqueue(1,'first');
+pq.enqueue(1,'second');
+pq.enqueue(3,'first');
+pq.enqueue(3,'second');
+pq.enqueue(3,'third');
 
-for(let i=0;i<6;i++) {
-    console.log(pq.dequeue());
-}
+console.log(pq.dequeue());  // 1,'first'
+console.log(pq.dequeue());  // 1,'second'
+console.log(pq.dequeue());  // 3,'second <--
+console.log(pq.dequeue());  // 3,'first'
+console.log(pq.dequeue());  // 3,'third
+
 
 
