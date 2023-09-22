@@ -2,6 +2,7 @@ class Node {
     constructor(priority,value) {
         this.priority = priority;
         this.value = value;
+        this.insertedTime = Date.now();
     }
 }
 class PriorityQueue {
@@ -45,12 +46,15 @@ class PriorityQueue {
             if(leftIdx < this.queue.length) {
                 left = this.queue[leftIdx];
                 if(element.priority > left.priority)    swap = leftIdx;
+                if(element.priority === left.priority && element.insertedTime > left.insertedTime)    swap =leftIdx;
             }    
             if(rightIdx < this.queue.length) {
                 right = this.queue[rightIdx];
                 if((!swap && element.priority > right.priority) || 
-                   (swap && left.priority > right.priority)
-                )   swap = rightIdx;
+                   (!swap && (element.priority === right.priority && element.insertedTime > right.insertedTime)) ||
+                   (swap && left.priority > right.priority) ||
+                   (swap && (left.priority === right.priority && left.insertedTime > right.insertedTime))
+                )  swap = rightIdx; 
             }   
             if(!swap)   break;
             this.queue[idx] = this.queue[swap];
@@ -59,20 +63,27 @@ class PriorityQueue {
         }
     }
 }
-// priorityqueue duplicated priority problem
-// inserted-first should come out first;
+// complete priorityqueue duplicated priority problem
+// inserted-first come out first;
 let pq = new PriorityQueue();
-pq.enqueue(1,'first');
-pq.enqueue(1,'second');
-pq.enqueue(3,'first');
-pq.enqueue(3,'second');
-pq.enqueue(3,'third');
+setTimeout(()=>pq.enqueue(1,'first'),0);
+setTimeout(()=>pq.enqueue(1,'second'),100);
+setTimeout(()=>pq.enqueue(3,'first'),200);
+setTimeout(()=>pq.enqueue(3,'second'),300);
+setTimeout(()=>pq.enqueue(3,'third'),400);
+setTimeout(()=>{
+    let length = pq.queue.length;
+    for(let i=0;i<length;i++) {
+        console.log(pq.dequeue());
+    }
+},500);
 
-console.log(pq.dequeue());  // 1,'first'
-console.log(pq.dequeue());  // 1,'second'
-console.log(pq.dequeue());  // 3,'second <--
-console.log(pq.dequeue());  // 3,'first'
-console.log(pq.dequeue());  // 3,'third
+// 1, 'first';
+// 1, 'second';
+// 3, 'first'
+// 3, 'second';
+// 3, 'third';
+
 
 
 
