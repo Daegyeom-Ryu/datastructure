@@ -43,6 +43,7 @@ class HashTable {
         for(let keyValueArr of this.keyMap) {
             if(!keyValueArr)    continue;
             for(let keyValue of keyValueArr) {
+                if(!keyValue)   continue;
                 keysArr.push(keyValue[0]);
             }
         }
@@ -53,6 +54,7 @@ class HashTable {
         for (let keyValueArr of this.keyMap) {
             if(!keyValueArr)    continue;
             for(let keyValue of keyValueArr) {
+                if(!keyValue)   continue;
                 valuesArr.push(keyValue[1]);
             }
         }
