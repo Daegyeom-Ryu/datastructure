@@ -45,8 +45,9 @@ class PriorityQueue {
             let swap = null;
             if(leftIdx < this.queue.length) {
                 left = this.queue[leftIdx];
-                if(element.priority > left.priority)    swap = leftIdx;
-                if(element.priority === left.priority && element.insertedTime > left.insertedTime)    swap =leftIdx;
+                if(element.priority > left.priority ||
+                   element.priority === left.priority && element.insertedTime > left.insertedTime     
+                )   swap = leftIdx;
             }    
             if(rightIdx < this.queue.length) {
                 right = this.queue[rightIdx];
